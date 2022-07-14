@@ -146,8 +146,6 @@ step "Update Amazon ECS Service" {
                 environmentFiles {
                     type = "none"
                 }
-                
-                }
             }
 
             waitOption {
