@@ -6,7 +6,6 @@ step "Deploy Amazon ECS Service" {
 
     action {
         action_type = "aws-ecs"
-        is_disabled = true
         step_package_version = "1.3.1"
         worker_pool = "STCApplications"
 
@@ -51,7 +50,7 @@ step "Deploy Amazon ECS Service" {
                 containerStorage {
                     readOnlyRootFileSystem = false
                 }
-                
+
                 healthCheck {
                 }
 
@@ -110,15 +109,14 @@ step "Deploy Amazon ECS Service" {
     }
 }
 
-
 step "Send \"Success\" Email" {
 
     action {
         action_type = "Octopus.Email"
-        is_disabled = true
         properties = {
             Octopus.Action.Email.Subject = "#{Octopus.ProjectGroup.Name} has succesfully Deployed!"
             Octopus.Action.Email.ToTeamIds = "STC-Mail-Team"
+            Octopus.Action.RunOnServer = "false"
         }
         worker_pool_variable = ""
     }
@@ -129,10 +127,10 @@ step "Send \"Failed\" Email" {
 
     action {
         action_type = "Octopus.Email"
-        is_disabled = true
         properties = {
             Octopus.Action.Email.Subject = "testing"
             Octopus.Action.Email.ToTeamIds = "STC-Mail-Team"
+            Octopus.Action.RunOnServer = "false"
         }
         worker_pool_variable = ""
     }
