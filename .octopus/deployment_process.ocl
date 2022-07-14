@@ -1,0 +1,295 @@
+step "Deploy Amazon ECS Service" {
+    package_requirement = "AfterPackageAcquisition"
+    properties = {
+        Octopus.Action.TargetRoles = "forcesetup-fargate-api-dev"
+    }
+
+    action {
+        action_type = "aws-ecs"
+        is_disabled = true
+        step_package_version = "1.3.1"
+        worker_pool = "STCApplications"
+
+        packages "forcesetup-api-fargate" {
+            acquisition_location = "NotAcquired"
+            feed = "ECR-US-EAST-1"
+            package_id = "forcesetup-api-fargate"
+            step_package_inputs_reference_id = "89adb2b3-f115-4d10-8fe2-f520c3b998d2"
+        }
+
+        inputs {
+            cfStackName = "fargate-API-DEv"
+            desiredCount = 1
+            maximumHealthPercent = 200
+            minimumHealthPercent = 100
+            name = "ForceSetup-APi-DEv"
+
+            additionalTags {
+                enableEcsManagedTags = true
+            }
+
+            containers {
+                command = ""
+                containerName = "ForceSetup-Api-DEV"
+                essential = true
+
+                containerImageReference {
+                    feedId = "Feeds-1199"
+                    imageName = "forcesetup-api-fargate"
+                    referenceId = "89adb2b3-f115-4d10-8fe2-f520c3b998d2"
+                }
+
+                containerLogging {
+                    type = "auto"
+                }
+
+                containerPortMappings {
+                    containerPort = 80
+                    protocol = "tcp"
+                }
+
+                containerStorage {
+                    readOnlyRootFileSystem = false
+                }
+
+                environmentVariables {
+                    key = "AppSettings:OrganizationName"
+                    type = "plain"
+                    value = "#{OrganizationName}"
+                }
+
+                environmentVariables {
+                    key = "Logging:Region"
+                    type = "plain"
+                    value = "#{AWS_REGION}"
+                }
+
+                environmentVariables {
+                    key = "Authentication:UserPoolId"
+                    type = "plain"
+                    value = "#{CognitoUserPool}"
+                }
+
+                environmentVariables {
+                    key = "ASPNETCORE_ENVIRONMENT"
+                    type = "plain"
+                    value = "#{ASPNETCORE_ENVIRONMENT}"
+                }
+
+                environmentVariables {
+                    key = "Logging:LogGroup"
+                    type = "plain"
+                    value = "#{AWS_LOGS_GROUP}"
+                }
+
+                environmentVariables {
+                    key = "Authentication:AccessKeys:AwsAccessKeyId"
+                    type = "plain"
+                    value = "#{AwsAccessKey}"
+                }
+
+                environmentVariables {
+                    key = "Authentication:AccessKeys:SecretAccessKey"
+                    type = "plain"
+                    value = "#{AwsSecretKey}"
+                }
+
+                environmentVariables {
+                    key = "Authentication:Cognito:ClientId"
+                    type = "plain"
+                    value = "#{CognitoClientId}"
+                }
+
+                environmentVariables {
+                    key = "Authentication:Cognito:ClientSecret"
+                    type = "plain"
+                    value = "#{CognitoClientSecret}"
+                }
+
+                environmentVariables {
+                    key = "Authentication:Cognito:MetadataAddress"
+                    type = "plain"
+                    value = "#{CognitoMetadataAddress}"
+                }
+
+                environmentVariables {
+                    key = "AppSettings:ManagementApiUrl"
+                    type = "plain"
+                    value = "#{ManagementApiUrl}"
+                }
+
+                environmentVariables {
+                    key = "RaygunSettings:ApiKey"
+                    type = "plain"
+                    value = "#{RaygunApiKey}"
+                }
+
+                environmentVariables {
+                    key = "AppSettings:SignupInvitationUrl"
+                    type = "plain"
+                    value = "#{SignupInvitationUrl}"
+                }
+
+                environmentVariables {
+                    key = "AppSettings:UpdateServiceUrl"
+                    type = "plain"
+                    value = "#{UpdatesUrl}"
+                }
+
+                healthCheck {
+                }
+
+                networkSettings {
+                    disableNetworking = false
+                }
+
+                repositoryAuthentication {
+                    type = "default"
+                }
+            }
+
+            loadBalancerMappings {
+                containerName = "ForceSetup-Api-DEV"
+                containerPort = 80
+                targetGroupArn = "arn:aws:elasticloadbalancing:us-east-1:427201084711:targetgroup/forceSetup-Api-dev/52b2177bd127971c"
+            }
+
+            networkConfiguration {
+                autoAssignPublicIp = true
+
+                securityGroupIds {
+                    id = "sg-0864cbedc01c76380"
+                }
+
+                subnetIds {
+                    id = "subnet-0a889c289040fbacc"
+                }
+
+                subnetIds {
+                    id = "subnet-06721f61dde62aa33"
+                }
+
+                subnetIds {
+                    id = "subnet-0381ba47a62e90ebb"
+                }
+            }
+
+            task {
+                cpu = 256
+                memory = 512
+                taskExecutionRole = "arn:aws:iam::427201084711:role/ecsTaskExecutionRole"
+                taskRole = "arn:aws:iam::427201084711:role/ecsTaskExecutionRole"
+
+                runtimePlatform {
+                    cpuArchitecture = "X86_64"
+                    operatingSystemFamily = "LINUX"
+                }
+            }
+
+            waitOption {
+                timeout = 30
+                type = "waitWithTimeout"
+            }
+        }
+    }
+}
+
+step "Update Amazon ECS Service" {
+    package_requirement = "AfterPackageAcquisition"
+    properties = {
+        Octopus.Action.TargetRoles = "forcesetup-fargate-api-dev"
+    }
+
+    action {
+        action_type = "aws-ecs-update-service"
+        is_disabled = true
+        step_package_version = "1.3.1"
+        worker_pool = "STCApplications"
+
+        packages "forcesetup-api-fargate" {
+            acquisition_location = "NotAcquired"
+            feed = "ECR-US-EAST-1"
+            package_id = "forcesetup-api-fargate"
+            step_package_inputs_reference_id = "88b57e13-2331-413d-859f-ce7f0fb7f92c"
+        }
+
+        inputs {
+            serviceName = "fargate-API-DEv-ServiceforceSetupAPiDEv-ZyicmfEUwpEz"
+            targetTaskDefinitionName = "ForceSetup-APi-DEv"
+            templateTaskDefinitionName = "ForceSetup-APi-DEv"
+
+            containers {
+                containerName = "ForceSetup-Api-DEV"
+
+                containerImageReference {
+                    feedId = "Feeds-1199"
+                    imageName = "forcesetup-api-fargate"
+                    referenceId = "88b57e13-2331-413d-859f-ce7f0fb7f92c"
+                }
+
+                environmentFiles {
+                    type = "none"
+                }
+
+                environmentVariables {
+                    type = "append"
+
+                    variables {
+                        key = "AppSettings:UpdateServiceUrl"
+                        type = "plain"
+                        value = "#{UpdatesUrl}"
+                    }
+                }
+            }
+
+            waitOption {
+                timeout = 30
+                type = "waitWithTimeout"
+            }
+        }
+    }
+}
+
+step "Send \"Success\" Email" {
+
+    action {
+        action_type = "Octopus.Email"
+        is_disabled = true
+        properties = {
+            Octopus.Action.Email.Subject = "#{Octopus.ProjectGroup.Name} has succesfully Deployed!"
+            Octopus.Action.Email.ToTeamIds = "STC-Mail-Team"
+        }
+        worker_pool_variable = ""
+    }
+}
+
+step "Send \"Failed\" Email" {
+    condition = "Failure"
+
+    action {
+        action_type = "Octopus.Email"
+        is_disabled = true
+        properties = {
+            Octopus.Action.Email.Subject = "testing"
+            Octopus.Action.Email.ToTeamIds = "STC-Mail-Team"
+        }
+        worker_pool_variable = ""
+    }
+}
+
+step "Run an AWS CLI Script" {
+
+    action {
+        action_type = "Octopus.AwsRunScript"
+        properties = {
+            Octopus.Action.Aws.AssumeRole = "False"
+            Octopus.Action.Aws.Region = "us-east-1"
+            Octopus.Action.AwsAccount.UseInstanceRole = "True"
+            Octopus.Action.Script.ScriptBody = "aws ecs list-clusters"
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "Bash"
+            OctopusUseBundledTooling = "False"
+        }
+        worker_pool = "STCApplications"
+    }
+}
