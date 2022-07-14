@@ -110,51 +110,6 @@ step "Deploy Amazon ECS Service" {
     }
 }
 
-step "Update Amazon ECS Service" {
-    package_requirement = "AfterPackageAcquisition"
-    properties = {
-        Octopus.Action.TargetRoles = "forcesetup-fargate-api-dev"
-    }
-
-    action {
-        action_type = "aws-ecs-update-service"
-        is_disabled = true
-        step_package_version = "1.3.1"
-        worker_pool = "STCApplications"
-
-        packages "forcesetup-api-fargate" {
-            acquisition_location = "NotAcquired"
-            feed = "ECR-US-EAST-1"
-            package_id = "forcesetup-api-fargate"
-            step_package_inputs_reference_id = "88b57e13-2331-413d-859f-ce7f0fb7f92c"
-        }
-
-        inputs {
-            serviceName = "fargate-API-DEv-ServiceforceSetupAPiDEv-ZyicmfEUwpEz"
-            targetTaskDefinitionName = "ForceSetup-APi-DEv"
-            templateTaskDefinitionName = "ForceSetup-APi-DEv"
-
-            containers {
-                containerName = "ForceSetup-Api-DEV"
-
-                containerImageReference {
-                    feedId = "Feeds-1199"
-                    imageName = "forcesetup-api-fargate"
-                    referenceId = "88b57e13-2331-413d-859f-ce7f0fb7f92c"
-                }
-
-                environmentFiles {
-                    type = "none"
-                }
-            }
-
-            waitOption {
-                timeout = 30
-                type = "waitWithTimeout"
-            }
-        }
-    }
-}
 
 step "Send \"Success\" Email" {
 
