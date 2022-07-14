@@ -147,15 +147,6 @@ step "Update Amazon ECS Service" {
                     type = "none"
                 }
 
-                environmentVariables {
-                    type = "append"
-
-                    variables {
-                        key = "AppSettings:UpdateServiceUrl"
-                        type = "plain"
-                        value = "#{UpdatesUrl}"
-                    }
-                }
             }
 
             waitOption {
