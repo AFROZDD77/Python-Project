@@ -51,91 +51,7 @@ step "Deploy Amazon ECS Service" {
                 containerStorage {
                     readOnlyRootFileSystem = false
                 }
-
-                environmentVariables {
-                    key = "AppSettings:OrganizationName"
-                    type = "plain"
-                    value = "#{OrganizationName}"
-                }
-
-                environmentVariables {
-                    key = "Logging:Region"
-                    type = "plain"
-                    value = "#{AWS_REGION}"
-                }
-
-                environmentVariables {
-                    key = "Authentication:UserPoolId"
-                    type = "plain"
-                    value = "#{CognitoUserPool}"
-                }
-
-                environmentVariables {
-                    key = "ASPNETCORE_ENVIRONMENT"
-                    type = "plain"
-                    value = "#{ASPNETCORE_ENVIRONMENT}"
-                }
-
-                environmentVariables {
-                    key = "Logging:LogGroup"
-                    type = "plain"
-                    value = "#{AWS_LOGS_GROUP}"
-                }
-
-                environmentVariables {
-                    key = "Authentication:AccessKeys:AwsAccessKeyId"
-                    type = "plain"
-                    value = "#{AwsAccessKey}"
-                }
-
-                environmentVariables {
-                    key = "Authentication:AccessKeys:SecretAccessKey"
-                    type = "plain"
-                    value = "#{AwsSecretKey}"
-                }
-
-                environmentVariables {
-                    key = "Authentication:Cognito:ClientId"
-                    type = "plain"
-                    value = "#{CognitoClientId}"
-                }
-
-                environmentVariables {
-                    key = "Authentication:Cognito:ClientSecret"
-                    type = "plain"
-                    value = "#{CognitoClientSecret}"
-                }
-
-                environmentVariables {
-                    key = "Authentication:Cognito:MetadataAddress"
-                    type = "plain"
-                    value = "#{CognitoMetadataAddress}"
-                }
-
-                environmentVariables {
-                    key = "AppSettings:ManagementApiUrl"
-                    type = "plain"
-                    value = "#{ManagementApiUrl}"
-                }
-
-                environmentVariables {
-                    key = "RaygunSettings:ApiKey"
-                    type = "plain"
-                    value = "#{RaygunApiKey}"
-                }
-
-                environmentVariables {
-                    key = "AppSettings:SignupInvitationUrl"
-                    type = "plain"
-                    value = "#{SignupInvitationUrl}"
-                }
-
-                environmentVariables {
-                    key = "AppSettings:UpdateServiceUrl"
-                    type = "plain"
-                    value = "#{UpdatesUrl}"
-                }
-
+                
                 healthCheck {
                 }
 
@@ -230,15 +146,7 @@ step "Update Amazon ECS Service" {
                 environmentFiles {
                     type = "none"
                 }
-
-                environmentVariables {
-                    type = "append"
-
-                    variables {
-                        key = "AppSettings:UpdateServiceUrl"
-                        type = "plain"
-                        value = "#{UpdatesUrl}"
-                    }
+                
                 }
             }
 
